@@ -139,3 +139,79 @@
 `INSERT INTO horses (id, nickname, birth_date, command, animal_id, pack_animals_id) VALUES (1, "Princess", "2020-02-23", "gallop", 2, 1), (2, "Snow", "2021-03-18", "to stand", 2, 1);`
 
 `INSERT INTO camels (id, nickname, birth_date, command, animal_id, pack_animals_id) VALUES (1, "Vasya", "2021-08-12", "go/stop", 2, 2), (2, "Ali", "2022-09-02", "go/stop", 2, 2);`
+
+`INSERT INTO donkeys (id, nickname, birth_date, command, animal_id, pack_animals_id) VALUES (1, "Iya", "2019-10-29", "go/stop", 2, 3), (2, "Tor", "2018-07-08", "go/stop", 2, 3);`
+
+![task9.3](img/img14.png)
+
+**10. Удалив из таблицы верблюдов, т.к. верблюдов решили перевезти в другой
+питомник на зимовку. Объединить таблицы лошади, и ослы в одну таблицу.**
+
+Было:
+
+![task10](img/img15.png)
+
+`TRUNCATE camels;`
+
+![task10.1](img/img16.png)
+
+`SELECT nickname, birth_date, command, animal_id, pack_animals_id FROM horses UNION SELECT nickname, birth_date, command, animal_id, pack_animals_id FROM donkeys;`
+
+![task10.2](img/img17.png)
+
+**11. Создать новую таблицу “молодые животные” в которую попадут все
+животные старше 1 года, но младше 3 лет и в отдельном столбце с точностью
+до месяца подсчитать возраст животных в новой таблице.**
+
+`CREATE TABLE young_animals (id INT PRIMARY KEY AUTO_INCREMENT, nickname CHAR(15), birth_date DATE, command CHAR(20), age CHAR(50));`
+
+`INSERT INTO young_animals (nickname, birth_date, command, age)`
+
+`SELECT nickname, birth_date, command, CONCAT(FLOOR(DATEDIFF(CURDATE(), birth_date)/30.44), " months") AS age` 
+
+`FROM (
+    SELECT nickname, birth_date, command FROM cats WHERE birth_date >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR) AND birth_date <= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) 
+    UNION ALL 
+    SELECT nickname, birth_date, command FROM dogs WHERE birth_date >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR) AND birth_date <= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) 
+    UNION ALL 
+    SELECT nickname, birth_date, command FROM hamsters WHERE birth_date >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR) AND birth_date <= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) 
+    UNION ALL 
+    SELECT nickname, birth_date, command FROM horses WHERE birth_date >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR) AND birth_date <= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) 
+    UNION ALL 
+    SELECT nickname, birth_date, command FROM donkeys WHERE birth_date >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR) AND birth_date <= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    ) AS tmp;`
+
+![task11](img/img18.png)
+
+**12. Объединить все таблицы в одну, при этом сохраняя поля, указывающие на
+прошлую принадлежность к старым таблицам.**
+
+`CREATE TABLE all_animals (id INT PRIMARY KEY AUTO_INCREMENT, nickname CHAR(15), birth_date DATE, command CHAR(20), animal_id INT);`
+
+`INSERT INTO all_animals (nickname, birth_date, command, animal_id)
+SELECT nickname, birth_date, command, animal_id FROM cats;`
+
+`INSERT INTO all_animals (nickname, birth_date, command, animal_id)
+SELECT nickname, birth_date, command, animal_id FROM dogs;`
+
+`INSERT INTO all_animals (nickname, birth_date, command, animal_id)
+SELECT nickname, birth_date, command, animal_id FROM hamsters;`
+
+`INSERT INTO all_animals (nickname, birth_date, command, animal_id)
+SELECT nickname, birth_date, command, animal_id FROM horses;`
+
+`INSERT INTO all_animals (nickname, birth_date, command, animal_id)
+SELECT nickname, birth_date, command, animal_id FROM donkeys;`
+
+`SELECT * FROM all_animals;`
+
+![task12](img/img19.png)
+
+
+
+
+
+
+
+
+
